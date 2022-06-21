@@ -21,9 +21,8 @@
     const Pigeon = new Dino("Pigeon",0.5,9,"herbavor","World Wide","Holocene","All birds are living dinosaurs.","images/pigeon.png");
 
     // Use IIFE to get human data from form
-        // Create Human Object
-
-    const humanData =(function (){
+function showInfo(){
+    const humanData = (function (){
         let nameIn = document.getElementById("name").value;
         let feetIn = document.getElementById("feet").value;
         let inchesIn = document.getElementById("inches").value;
@@ -55,33 +54,36 @@
             image: passImage,
         }   
     })();
-    var humanObject =humanData;
+
+    // Create Human Object
+    var humanObject =new Dino(humanData.name(), humanData.weight(), humanData.height(), humanData.diet(), '', '', '', humanData.image());
+    //freezing the object so no one can change the info
+    Object.freeze(humanObject);
+
     // Create Dino Compare Method 1
     // NOTE: Weight in JSON file is in lbs, height in inches. 
     function compareHeight(dinoName){
-        return `The height of ${dinoName.species} is ${dinoName.height} inches , and your height is ${humanObject.height()} inches.`;
+        return `The height of ${dinoName.species} is ${dinoName.height} inches , and your height is ${humanObject.height} inches.`;
     };
     
     // Create Dino Compare Method 2
     // NOTE: Weight in JSON file is in lbs, height in inches.
     function compareWeight(dinoName){
-        return `The weight of the ${dinoName.species} is ${dinoName.weight} lbs , and your weight is ${humanObject.weight()} lbs.`;
+        return `The weight of the ${dinoName.species} is ${dinoName.weight} lbs , and your weight is ${humanObject.weight} lbs.`;
     };
     
     // Create Dino Compare Method 3
     // NOTE: Weight in JSON file is in lbs, height in inches.
     function compareDiet(dinoName){
-        return `The ${dinoName.species} has diet of ${dinoName.diet} , while you have diet of ${humanObject.diet()} .`;
+        return `The ${dinoName.species} has diet of ${dinoName.diet} , while you have diet of ${humanObject.diet} .`;
     };
 
-   
     // function to generate random integer number to be used in switch statment for fact proprety 
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
     };
-    // switch decalration for fact to be used in tiles array
 
-    
+    // switch decalration for fact to be used in tiles array
     let generateRandomFact= function(dinoName){
         let factIndex = getRandomInt(9);
         let factValue=""
@@ -140,8 +142,8 @@
             image : Brachiosaurus.image
         }},
         {human :{
-            name : humanObject.name(),
-            image : humanObject.image()
+            name : humanObject.species,
+            image : humanObject.image
         }},
         {stegosaurus: {
             name :Stegosaurus.species,
@@ -168,17 +170,16 @@
   
  
     // Remove form from screen
-        let hideForm=document.getElementById('btn').addEventListener("click",function(){
-            let elem=document.getElementById('dino-compare');
-            elem.remove();
-        });
+    let hideForm=function(){
+        let elem=document.getElementById('dino-compare');
+        elem.remove();
+    };
+    hideForm()
 
-// On button click, prepare and display infographic
-    let displayIonfographic =document.getElementById('btn').addEventListener("click",function(){
+    // On button click, prepare and display infographic
+    let displayInfographic =function(){
         let mainElement = document.getElementById('grid');
-       
-
-    mainElement.innerHTML=`
+        mainElement.innerHTML=`
         <div class="grid-item">
             <h3> ${tilesArray[0][Object.keys(tilesArray[0]).join('')]['name']}</h3>
             <img src=${tilesArray[0][Object.keys(tilesArray[0]).join('')]['image']} alt="">
@@ -223,4 +224,9 @@
             <img src=${tilesArray[8][Object.keys(tilesArray[8]).join('')]['image']} alt="">
             <p>${tilesArray[8][Object.keys(tilesArray[8]).join('')]['fact']}<p>
         </div>` 
-    });
+    };
+    displayInfographic();
+}
+//create event listener to show infograpic on clicking the compare me button
+const compareMe = document.getElementById('btn');
+compareMe.addEventListener("click",showInfo);
